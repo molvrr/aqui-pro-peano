@@ -141,3 +141,15 @@ const testSum2: testSum2 = true
 type Sum3 = Sum<Head<1>, Head<1>>
 type testSum3 = Eq<Sum3, Cons<0, Cons<0, Head<1>>>>
 const testSum3: testSum3 = true
+
+type Sum4 = Sum<Cons<0, Head<0>>, Cons<0, Head<0>>>
+type testSum4 = Eq<Sum4, Cons<0, Head<0>>>
+const testSum4: testSum4 = true
+
+type Sum5 = Sum<Cons<0, Cons<0, Head<1>>>, Cons<0, Cons<1, Head<0>>>>
+type testSum5 = Eq<Sum5, Cons<0, Cons<1, Head<1>>>>
+const testSum5: testSum5 = true
+
+type Sum6 = Sum<Cons<1, Cons<1, Cons<1, Head<1>>>>, Cons<1, Cons<1, Cons<1, Head<1>>>>>
+type testSum6 = Eq<Sum6, Cons<0, Cons<0, Cons<0, Cons<0, Cons<0, Head<1>>>>>>>
+const testSum6: testSum6 = true
