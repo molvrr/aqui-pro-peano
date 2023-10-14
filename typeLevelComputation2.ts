@@ -13,8 +13,6 @@ type HalfAdder<X extends Binary, Y extends Binary> = { binary: Xor<X, Y>, next_d
 type FullAdder<X extends Binary, Y extends Binary, CIN extends Binary> =
   Cons<Xor<Xor<X, Y>, CIN>, Head<Or<And<X, Y>, And<CIN, Xor<X, Y>>>>>
 
-type Eq<X, Y> = X extends Y ? true : false
-
 // HalfAdder
 
 type testHalfAdderA = Eq<HalfAdder<0, 0>, Cons<0, Head<0>>>
@@ -77,20 +75,37 @@ type testConsMerge = Eq<Merge, Cons<1, Cons<0, Cons<1, Head<0>>>>>
 const testConsMerge: testConsMerge = true
 
 type FullAddDigit<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
-  X extends Cons<infer A, infer _B>
-  ? Y extends Cons<infer C, infer _D>
-    ? FullAdder<A, C, CIN>
+  X extends Cons<infer XBin, infer _XNext>
+  ? Y extends Cons<infer YBin, infer _YNext>
+    ? FullAdder<XBin, YBin, CIN>
     : null
   : null // TODO: Achar um valor melhor que null
 
-type testFullAddDigitE = FullAddDigit<Head<0>, Head<0>, 0>
-type testFullAddDigitF = FullAddDigit<Head<0>, Head<0>, 1>
-type testFullAddDigitG = FullAddDigit<Head<0>, Head<1>, 0>
-type testFullAddDigitH = FullAddDigit<Head<0>, Head<1>, 1>
-type testFullAddDigitI = FullAddDigit<Head<1>, Head<0>, 0>
-type testFullAddDigitJ = FullAddDigit<Head<1>, Head<0>, 1>
-type testFullAddDigitK = FullAddDigit<Head<1>, Head<1>, 0>
-type testFullAddDigitL = FullAddDigit<Head<1>, Head<1>, 1>
+type testFullAddDigitE = Eq<FullAddDigit<Head<0>, Head<0>, 0>, Cons<0, Head<0>>>
+const testFullAddDigitE: testFullAddDigitE = true
 
-type Problem<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
+type testFullAddDigitF = Eq<FullAddDigit<Head<0>, Head<0>, 1>, Cons<1, Head<0>>>
+const testFullAddDigitF: testFullAddDigitF = true
+
+type testFullAddDigitG = Eq<FullAddDigit<Head<0>, Head<1>, 0>, Cons<1, Head<0>>>
+const testFullAddDigitG: testFullAddDigitG = true
+
+type testFullAddDigitH = Eq<FullAddDigit<Head<0>, Head<1>, 1>, Cons<0, Head<1>>>
+const testFullAddDigitH: testFullAddDigitH = true
+
+type testFullAddDigitI = Eq<FullAddDigit<Head<1>, Head<0>, 0>, Cons<1, Head<0>>>
+const testFullAddDigitI: testFullAddDigitI = true
+
+type testFullAddDigitJ = Eq<FullAddDigit<Head<1>, Head<0>, 1>, Cons<0, Head<1>>>
+const testFullAddDigitJ: testFullAddDigitJ = true
+
+type testFullAddDigitK = Eq<FullAddDigit<Head<1>, Head<1>, 0>, Cons<0, Head<1>>>
+const testFullAddDigitK: testFullAddDigitK = true
+
+type testFullAddDigitL = Eq<FullAddDigit<Head<1>, Head<1>, 1>, Cons<1, Head<1>>>
+const testFullAddDigitL: testFullAddDigitL = true
+
+// Sum<Cons<1, Head<0>>, Cons<1, Head<0>>, 0>
+//
+type Sum<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
  FullAddDigit<X, Y, CIN> 
