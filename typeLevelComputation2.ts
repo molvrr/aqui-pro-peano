@@ -58,9 +58,23 @@ const testFullAdderL: testFullAdderL = true
 type BinaryUmdaHika = Head<0>
 type BinaryDoisdaHika = Head<0>
 
-// Cons<1, Head<0>> + Cons<1, Cons<1, Head<1>>> = 
+// Se o next_digit do X for null, X = Head -> X.next_digit = Y
+// Se não for, o next_digit é um PeanoBinary chamado X1. ConsMerge<X1, Y>
+//
+// ConsMerge<Cons<1, Head<0>>, Cons<1, Head<0>>>
+// ConsMerge<Head<0>, Cons<1, Cons<1, Head<0>>>>
+// Cons<0, Cons<1, Cons<1, Head<0>>>>
 
-// type ConsMerge<X extends PeanoBinary, Y extends PeanoBinary> = X extends Cons<infer A, infer B> ? 
+type ConsMerge<X extends PeanoBinary, Y extends PeanoBinary> =
+  X extends Cons<infer XBin, infer XNext>
+  ? XNext extends null
+    ? Y extends Cons<infer YBin, infer YNext> ? Cons<YBin, Cons<XBin, YNext>> : null
+    : Y extends Cons<infer _YBin, infer _YNext> ? ConsMerge<XNext, Cons<XBin, Y>> : null
+  : null
+
+type Merge = ConsMerge<Cons<1, Head<0>>, Cons<1, Head<0>>>
+type testConsMerge = Eq<Merge, Cons<1, Cons<0, Cons<1, Head<0>>>>>
+const testConsMerge: testConsMerge = true
 
 type FullAddDigit<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
   X extends Cons<infer A, infer _B>
