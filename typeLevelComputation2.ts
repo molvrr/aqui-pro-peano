@@ -16,7 +16,7 @@ type FullAdder<X extends Binary, Y extends Binary, CIN extends Binary> =
 // HalfAdder
 
 type testHalfAdderA = Eq<HalfAdder<0, 0>, Cons<0, Head<0>>>
-const testHalfAdderA: testHalfAdderA = true 
+const testHalfAdderA: testHalfAdderA = true
 
 type testHalfAdderB = Eq<HalfAdder<0, 1>, Cons<1, Head<0>>>
 const testHalfAdderB: testHalfAdderB = true
@@ -66,8 +66,8 @@ type BinaryDoisdaHika = Head<0>
 type ConsMerge<X extends PeanoBinary, Y extends PeanoBinary> =
   X extends Cons<infer XBin, infer XNext>
   ? XNext extends null
-    ? Y extends Cons<infer YBin, infer YNext> ? Cons<YBin, Cons<XBin, YNext>> : null
-    : Y extends Cons<infer _YBin, infer _YNext> ? ConsMerge<XNext, Cons<XBin, Y>> : null
+  ? Y extends Cons<infer YBin, infer YNext> ? Cons<YBin, Cons<XBin, YNext>> : null
+  : Y extends Cons<infer _YBin, infer _YNext> ? ConsMerge<XNext, Cons<XBin, Y>> : null
   : null
 
 type Merge = ConsMerge<Cons<1, Head<0>>, Cons<1, Head<0>>>
@@ -77,8 +77,8 @@ const testConsMerge: testConsMerge = true
 type FullAddDigit<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
   X extends Cons<infer XBin, infer _XNext>
   ? Y extends Cons<infer YBin, infer _YNext>
-    ? FullAdder<XBin, YBin, CIN>
-    : null
+  ? FullAdder<XBin, YBin, CIN>
+  : null
   : null // TODO: Achar um valor melhor que null
 
 type testFullAddDigitE = Eq<FullAddDigit<Head<0>, Head<0>, 0>, Cons<0, Head<0>>>
@@ -106,6 +106,38 @@ type testFullAddDigitL = Eq<FullAddDigit<Head<1>, Head<1>, 1>, Cons<1, Head<1>>>
 const testFullAddDigitL: testFullAddDigitL = true
 
 // Sum<Cons<1, Head<0>>, Cons<1, Head<0>>, 0>
-//
-type Sum<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
- FullAddDigit<X, Y, CIN> 
+// FullAddDigit<X, Y, CIN>
+// Cons<0, Head<1>>
+
+type Bin<X extends PeanoBinary> = X extends Cons<infer XBin, infer _XNext> ? XBin : null
+type testBin = Eq<Bin<Cons<1, Head<1>>>, 1>
+const testBin: testBin = true
+type testBin2 = Eq<Bin<Head<1>>, 1>
+const testBin2: testBin2 = true
+type testBin3 = Eq<Bin<null>, null>
+const testBin3: testBin3 = true
+
+type Next<X extends PeanoBinary> = X extends Cons<infer _XBin, infer XNext> ? XNext : Head<0>
+type testNext = Eq<Next<Cons<1, Head<1>>>, Head<1>>
+const testNext: testNext = true
+
+type SumInner<X extends PeanoBinary, Y extends PeanoBinary, CIN extends Binary> =
+  FullAddDigit<X, Y, CIN> extends Cons<infer ConsSum, infer ConsNext>
+  ? ConsNext extends Cons<infer COut, infer _X>
+    ? Cons<ConsSum, SumInner<Next<X>, Next<Y>, COut>>
+    : null
+  : CIN extends 1 ? Cons<0, Head<CIN>> : null
+
+type Sum<X extends PeanoBinary, Y extends PeanoBinary> = SumInner<X, Y, 0>
+
+type Sum1 = Sum<Head<0>, Head<0>>
+type testSum1 = Eq<Sum1, Head<0>>
+const testSum1: testSum1 = true
+
+type Sum2 = Sum<Head<0>, Head<1>>
+type testSum2 = Eq<Sum2, Head<1>>
+const testSum2: testSum2 = true
+
+type Sum3 = Sum<Head<1>, Head<1>>
+type testSum3 = Eq<Sum3, Cons<0, Cons<0, Head<1>>>>
+const testSum3: testSum3 = true
